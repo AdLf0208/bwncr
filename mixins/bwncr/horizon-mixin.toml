@@ -1,0 +1,88 @@
+[mod]
+id = "bwncr"
+# The PORT's version, not the original mod's 3.20.4 (AGENT_PLAYBOOK.md 1.7).
+version = "0.1.0"
+priority = 100
+
+[compatibility]
+horizon_revision = "1d63e0a5a37a7a708eb0b32b49bf0dfeb28ed8a9"
+
+# The pure sound-silencing policy (standalone crate lib, injected as
+# `crate::game::bwncr`).
+[[module]]
+id = "runtime"
+file = "crates/horizon-client/src/game.rs"
+name = "bwncr"
+source = "runtime.rs"
+
+# Game-side glue: the config, the `/bwncr` commands and the heard-sound feed.
+[[module]]
+id = "state"
+file = "crates/horizon-client/src/game.rs"
+name = "bwncr_state"
+source = "support.rs"
+
+# The content half is inside this bundle (`data/bwncr-content.hmod`, the built
+# `content/bwncr.hmod`): this writes it to `.horizon-cache/` and appends it to the
+# dev-mod list, so one `.hnmod` installs the lang files and the code. The registry
+# keeps one file per project, so a split port could not be listed; AE2 ships the
+# same pattern.
+[[injection]]
+id = "embedded-content"
+kind = "HEAD"
+cancellable = true
+target = "horizon_client::game::mods::content_root"
+helper = "embedded_content.rs"
+bindings = [
+  { name = "root", ty = "&std::path::Path", value = "root" },
+  { name = "enabled", ty = "&std::collections::BTreeSet<String>", value = "enabled" },
+  { name = "dev", ty = "&[std::path::PathBuf]", value = "dev" },
+]
+
+# Before the server starts: read config/bwncr-common.toml (or write the defaults).
+[[injection]]
+id = "about-to-start"
+hook = "server_about_to_start"
+hook_version = 1
+kind = "HEAD"
+helper = "about.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+]
+
+# Declare `/bwncr …` in the server's command tree.
+[[injection]]
+id = "register-commands"
+hook = "register_commands"
+hook_version = 1
+kind = "HEAD"
+helper = "register.rs"
+bindings = [
+  { name = "commands", ty = "&mut Vec<crate::game::native_server::NativeCommand>", value = "commands" },
+]
+
+# Answer a player's `/bwncr …` (or the owner console's).
+[[injection]]
+id = "perform-command"
+hook = "perform_command"
+hook_version = 1
+kind = "HEAD"
+helper = "perform.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "player", ty = "&crate::game::native_server::NativeServerPlayer", value = "player" },
+  { name = "command", ty = "&str", value = "command" },
+  { name = "ran", ty = "&mut bool", value = "ran" },
+]
+
+# The client hears the sound packets the server sends, for `/bwncr listen`.
+[[injection]]
+id = "client-packet"
+hook = "client_packet"
+hook_version = 1
+kind = "HEAD"
+helper = "packet.rs"
+bindings = [
+  { name = "game", ty = "&mut crate::game::Game<'_>", value = "&mut *self" },
+  { name = "packet", ty = "&horizon_protocol::packets::play::Clientbound", value = "packet" },
+]

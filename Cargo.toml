@@ -1,0 +1,19 @@
+[package]
+# Ported from: Bad Wither No Cookie Reloaded 3.20.4 (Kreezxil/Eleksploded, MIT),
+# Minecraft Java 1.21.1 NeoForge. A clean-room Rust rewrite: the upstream source
+# was read for its rules only; no Java code or asset is translated.
+# Local-only until the maintainer approves publishing (ARCHITECTURE.md §8).
+name = "horizon-bwncr"
+version = "3.20.4"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+description = "Bad Wither No Cookie Reloaded for Horizon: the server-broadcast sound silencing policy"
+
+[lib]
+# This exact source is also injected as a same-crate module by horizon-mixins.
+path = "mixins/bwncr/runtime.rs"
+
+[workspace]
+members = ["tools/audit"]
+resolver = "2"

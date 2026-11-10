@@ -1,0 +1,49 @@
+id = "bwncr"
+kind = "native-mod"
+name = "bwncr"
+summary = "A Horizon port of bwncr."
+description = """
+A port of [bwncr](https://gitlab.com/kreezxil/BadWitherNoCookie) for Horizon.
+
+**Implemented so far**
+
+- Analysis clone: `https://gitlab.com/kreezxil/BadWitherNoCookie` branch `1.21.1`
+- at `112fa60559f1152141eb38515c9b85ada36b3b9f` (`2026-05-24`, version 3.20.4 —
+- the jar's build); the clone was deleted after these notes.
+- A sound about to play is replaced with nothing when its name matches
+- (`SoundHandler.java:27-59`):
+- `entity.wither.spawn` (exact) or `entity.wither.death` (case-insensitive)
+- and `silenceWither`;
+- `entity.wandering_trader.ambient` or `entity.llama.ambient`
+
+**Not yet ported**
+
+- The suppression itself is not carried.** The pin has no client "a sound is
+- about to play" hook: `native-hooks.json` has no sound/audio hook, and
+- `play_sound_to` is still `@API:play_sound_to@` (pending, unstamped). The
+- named hook request is NeoForge's `PlaySoundEvent` — sound id, category,
+- position, volume, pitch, **cancellable**. Until it is stamped the port cannot
+- silence anything; `/bwncr` reports the decisions the hook will use.
+- `/bwncr listen` prints through `/bwncr heard`, not live.** Upstream sends
+- each name to the player's chat as it arrives (client-side). The port records
+
+Original copyright and licence notices are kept in this repository. Pinned to
+Horizon 1d63e0a and horizon-mixins 5a64af93. Help with the remaining slices is
+welcome.
+"""
+authors = ["AdLf0208"]
+owners = ["AdLf0208"]
+owner_ids = [107615167]
+license = "MIT"
+source = "https://github.com/AdLf0208/bwncr"
+icon = "icons/bwncr.png"
+categories = ["utility"]
+tags = ["port", "horizon"]
+
+[[versions]]
+version = "0.1.0"
+published = "2026-11-10"
+game = "26.3"
+file = "bwncr.hnmod"
+sha256 = "aac8cd3ec64f29a28826779d5c58264d0eb0bad15d8797d283884e5e443ca6d2"
+changelog = "First release"

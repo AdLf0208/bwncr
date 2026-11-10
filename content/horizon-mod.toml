@@ -1,0 +1,17 @@
+# Port-owned content mod for Bad Wither No Cookie Reloaded 3.20.4
+# (Kreezxil/Eleksploded, MIT): the mod's own lang files, carried from the jar.
+# The native bundle in ../ owns the sound policy and the /bwncr commands; the
+# pin has no sound hook yet, so nothing is silenced (see ../notes.md).
+#
+# Licence: MIT — local-only until the maintainer approves publishing
+# (ARCHITECTURE.md section 8).
+id = "bwncr"
+name = "Bad Wither No Cookie Reloaded"
+# The PORT's version, not the original mod's 3.20.4 (AGENT_PLAYBOOK.md 1.7):
+# a partial port ships 0.1.0 so the registry entry, the file and the release agree.
+version = "0.1.0"
+description = "Silences server-wide wither, trader, dragon and thunder sounds"
+authors = ["Kreezxil", "Eleksploded"]
+api = "0.2"
+side = "both"
+capabilities = ["registries"]
